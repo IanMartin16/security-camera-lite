@@ -1,0 +1,19 @@
+# FastAPI y servidor
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# IA y visión computacional
+ultralytics==8.1.0
+opencv-python-headless==4.9.0.80
+numpy==1.26.3
+pillow==10.2.0
+torch==2.1.2
+torchvision==0.16.2
+
+# Utilidades
+python-dotenv==1.0.0
+pydantic==2.5.3
+loguru==0.7.2
+
+pip install pydantic-settings

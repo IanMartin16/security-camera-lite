@@ -34,7 +34,6 @@ test_images/
 Thumbs.db
 
 # Docs
-requirements.txt
 QUICKSTART.md
 RAPIDAPI_GUIDE.md
 test.py
