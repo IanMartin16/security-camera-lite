@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Environment
+.env
+
+# YOLO models (se descargan automáticamente)
+*.pt
+
+# Logs
+*.log
+
+# Testing
+test_images/
+*.jpg
+*.jpeg
+*.png
+!sample.jpg
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docs
+requirements.txt
+QUICKSTART.md
+RAPIDAPI_GUIDE.md
+test.py
