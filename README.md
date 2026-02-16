@@ -181,17 +181,6 @@ docker run -p 8000:8000 security-camera-lite
    - Start Command: `python main.py`
 4. Deploy!
 
-## 💰 RapidAPI Setup
-
-1. Crear cuenta en RapidAPI
-2. Crear nueva API
-3. Configurar endpoints:
-   - POST `/detect`
-   - GET `/classes`
-   - GET `/health`
-4. Configurar pricing tiers
-5. Publicar!
-
 ## 🛠️ Troubleshooting
 
 **Error: "Model not loaded"**
