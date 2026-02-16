@@ -33,7 +33,7 @@ async def lifespan(app: FastAPI):
     """Lifecycle events"""
     # Startup
     logger.info("🚀 Iniciando Security Camera LITE API...")
-    
+
     # Cargar modelo YOLO
     try:
         detection_service.load_model()
@@ -41,9 +41,9 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"❌ Error al cargar modelo: {e}")
         logger.warning("⚠️  API iniciada pero sin modelo cargado")
-    
+
     yield
-    
+
     # Shutdown
     logger.info("👋 Deteniendo API...")
 
@@ -89,7 +89,7 @@ async def root():
 async def health_check():
     """
     Health check - Verificar estado del servicio
-    
+
     Retorna el estado del servicio y si el modelo está cargado.
     """
     return {
@@ -104,7 +104,7 @@ async def health_check():
 async def get_classes():
     """
     Obtener clases disponibles
-    
+
     Retorna la lista de todas las clases de objetos que el modelo puede detectar.
     Son las 80 clases del dataset COCO.
     """
@@ -131,35 +131,35 @@ async def detect_objects(
 ):
     """
     Detectar objetos en una imagen
-    
+
     ## Parámetros:
     - **file**: Imagen a procesar (formatos: JPG, PNG, BMP, etc.)
     - **confidence** (opcional): Umbral de confianza (0.1-1.0). Default: 0.5
-    
+
     ## Respuesta:
     - **success**: Si la detección fue exitosa
     - **image_size**: Dimensiones de la imagen procesada
     - **detections_count**: Número de objetos detectados
     - **detections**: Lista de objetos con clase, confianza y bounding box
-    
+
     ## Ejemplo de uso:
     ```bash
     curl -X POST "http://localhost:8000/detect?confidence=0.6" \\
       -F "file=@mi_imagen.jpg"
     ```
-    
+
     ## Clases detectables:
     80 clases del dataset COCO: personas, vehículos, animales, objetos comunes, etc.
     Ver endpoint `/classes` para lista completa.
     """
-    
+
     # Validar tipo de archivo
     if file.content_type and not file.content_type.startswith('image/'):
         raise HTTPException(
             status_code=400,
             detail=f"Archivo debe ser una imagen. Recibido: {file.content_type}"
         )
-    
+
     # Si no tiene content_type, validar por extensión
     if not file.content_type:
         valid_extensions = ['.jpg', '.jpeg', '.png', '.bmp', '.webp', '.gif']
@@ -168,11 +168,11 @@ async def detect_objects(
                 status_code=400,
                 detail=f"Archivo debe ser una imagen (JPG, PNG, etc.). Recibido: {file.filename}"
             )
-    
+
     try:
         # Leer imagen
         image_bytes = await file.read()
-        
+
         # Validar tamaño (max 10MB)
         max_size = 10 * 1024 * 1024  # 10MB
         if len(image_bytes) > max_size:
@@ -180,19 +180,19 @@ async def detect_objects(
                 status_code=400,
                 detail=f"Imagen muy grande. Máximo: 10MB. Recibido: {len(image_bytes) / 1024 / 1024:.2f}MB"
             )
-        
+
         logger.info(f"📸 Procesando imagen: {file.filename} ({len(image_bytes) / 1024:.2f}KB)")
-        
+
         # Detectar objetos
         result = detection_service.detect_from_bytes(image_bytes, confidence)
-        
+
         if not result['success']:
             raise HTTPException(status_code=500, detail=result.get('error', 'Error desconocido'))
-        
+
         logger.info(f"✅ Detección exitosa: {result['detections_count']} objetos encontrados")
-        
+
         return result
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -217,13 +217,30 @@ async def global_exception_handler(request, exc):
 
 if __name__ == "__main__":
     import uvicorn
-    
+
     logger.info(f"🚀 Iniciando servidor en {settings.API_HOST}:{settings.API_PORT}")
-    
+
     uvicorn.run(
         "main:app",
         host=settings.API_HOST,
         port=settings.API_PORT,
+        reload=settings.DEBUG,
+        log_level=settings.LOG_LEVEL.lower()
+    )
+
+if __name__ == "__main__":
+    import uvicorn
+    import os
+
+    # Render usa PORT environment variable
+    port = int(os.environ.get("PORT", settings.API_PORT))
+
+    logger.info(f"🚀 Iniciando servidor en {settings.API_HOST}:{port}")
+
+    uvicorn.run(
+        "main:app",
+        host=settings.API_HOST,
+        port=port,  # Usar puerto dinámico
         reload=settings.DEBUG,
         log_level=settings.LOG_LEVEL.lower()
     )
