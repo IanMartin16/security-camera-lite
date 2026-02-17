@@ -3,13 +3,14 @@ fastapi==0.109.0
 uvicorn[standard]==0.27.0
 python-multipart==0.0.6
 
-# IA y visión computacional
-ultralytics==8.1.0
-opencv-python-headless==4.9.0.80
-numpy==1.26.3
-pillow==10.2.0
-torch==2.1.2
-torchvision==0.16.2
+# IA - YOLOv11 + ONNX Runtime
+ultralytics==8.3.0
+onnxruntime==1.19.2
+opencv-python-headless==4.10.0.84
+numpy==1.26.4
+pillow==11.0.0
+torch==2.5.1
+torchvision==0.20.1
 
 # Utilidades
 python-dotenv==1.0.0
